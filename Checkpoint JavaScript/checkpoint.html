@@ -1,0 +1,47 @@
+<!-- Escriba una función que utilice la API de GitHub para obtener la lista de repositorios para un usuario determinado 
+('https://api.github.com/users/' + usuario + '/repos'). La función toma el nombre del usuario (ponga 'google' como nombre) 
+como parámetro y devuelve una Promesa que se resuelve con el conjunto de repositorios. -->
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <h1>Repositorios GitHub</h1>
+    <input type="text" id="nombre-usuario" placeholder="nombre del usuario" />
+    <button onclick="obtenerRepositorios()">Obtener Repositorios</button>
+    <div id="repositorios"></div>
+    <script>
+      async function obtenerRepositorios(){
+          const nombreUsuario = document.getElementById('nombre-usuario')
+          if(!nombreUsuario){
+              console.error('error')
+              return
+          }
+          try{
+              const response = await fetch (`https://api.github.com/users/${nombreUsuario.value}/repos`)
+              const repos = await response.json();
+                const contenedorRepositorios = document.getElementById('repositorios')
+                contenedorRepositorios.innerHTML=''
+                if(repos.length === 0){
+                    contenedorRepositorios.textContent = 'no existe'
+                }else{
+                    const listaRepos = document.createElement('ul')
+                    repos.forEach(repo => {
+                        const elementoRepo = document.createElement('li')
+                        elementoRepo.textContent = repo.name
+                        listaRepos.appendChild(elementoRepo)
+                    });
+                    contenedorRepositorios.appendChild(listaRepos)
+                }
+          }
+          catch(error){
+            console.error('Error',error)
+          }
+      }
+    </script>
+  </body>
+</html>
